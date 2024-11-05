@@ -14,3 +14,8 @@ llama-index-readers-file==0.2.2
 llama-index-readers-llama-parse==0.3.0
 llama-parse==0.5.11
 chromadb==0.5.15
+llama-index-llms-gemini
+llama-index-embeddings-gemini
+google-generativeai
+llama-index-vector-stores-chroma
+python-dotenv
