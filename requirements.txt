@@ -22,3 +22,4 @@ python-dotenv==1.0.1
 transformers==4.46.1
 torch==2.2.1+cu121
 pydub==0.25.1
+streamlit

@@ -1,43 +1,62 @@
 import os
-import re
 import chromadb
 from dotenv import load_dotenv
-from llama_index.core import Document
-from llama_index.core import Settings
-from llama_index.core import SimpleDirectoryReader
-from llama_index.core import StorageContext
-from llama_index.core import VectorStoreIndex
-from llama_index.core import Settings
+from llama_index.core import Document, Settings, SimpleDirectoryReader, StorageContext, VectorStoreIndex
 from llama_index.llms.gemini import Gemini
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.embeddings.gemini import GeminiEmbedding
-load_dotenv()
+
+class IndexBuilder:
+    def __init__(self, data_path, db_path, api_key_var="GOOGLE_API_KEY"):
+        """Initialize the IndexBuilder class.
+        
+        Args:
+            data_path (str): Path to the directory containing data files.
+            db_path (str): Path to the persistent database for Chroma.
+            api_key_var (str): Environment variable name for the API key. Default is 'GOOGLE_API_KEY'.
+        """
+        load_dotenv()
+        self.data_path = data_path
+        self.db_path = db_path
+        self.api_key = os.environ.get(api_key_var)
+        if not self.api_key:
+            raise ValueError(f"Environment variable {api_key_var} is not set.")
+        
+        # Initialize LLM and embedding model
+        self.llm = Gemini(api_key=self.api_key)
+        self.embed_model = GeminiEmbedding(model_name="models/embedding-001")
+        
+        # Apply settings
+        Settings.llm = self.llm
+        Settings.embed_model = self.embed_model
+        
+        # Create a Chroma client and collection
+        self.client = chromadb.PersistentClient(path=self.db_path)
+        self.chroma_collection = self.client.get_or_create_collection("quickstart")
+        
+        # Initialize vector store and storage context
+        self.vector_store = ChromaVectorStore(chroma_collection=self.chroma_collection)
+        self.storage_context = StorageContext.from_defaults(vector_store=self.vector_store)
+
+    def load_documents(self):
+        """Load documents from the specified data path."""
+        reader = SimpleDirectoryReader(self.data_path)
+        documents = reader.load_data()
+        return documents
+
+    def create_index(self, show_progress=True):
+        """Create a vector store index from documents and save it to disk.
+        
+        Args:
+            show_progress (bool): Whether to display progress while creating the index.
+        
+        Returns:
+            VectorStoreIndex: The created index.
+        """
+        documents = self.load_documents()
+        index = VectorStoreIndex.from_documents(
+            documents, storage_context=self.storage_context, show_progress=show_progress
+        )
+        return index
 
 
-llm = Gemini(api_key=os.environ["GOOGLE_API_KEY"])
-embed_model = GeminiEmbedding(model_name="models/embedding-001")
-
-llm = Gemini(api_key=os.environ["GOOGLE_API_KEY"])
-embed_model = GeminiEmbedding(model_name="models/embedding-001")
-Settings.llm = llm
-Settings.embed_model = embed_model
-
-# Load data from PDF
-from llama_index.core import SimpleDirectoryReader
-documents = SimpleDirectoryReader("data").load_data()
-
-# Create a client and a new collection
-client = chromadb.PersistentClient(path="./chroma_db")
-chroma_collection = client.get_or_create_collection("quickstart")
-
-# Create a vector store
-vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-
-# Create a storage context
-storage_context = StorageContext.from_defaults(vector_store=vector_store)
-
-
-# Create an index from the documents and save it to the disk.
-index = VectorStoreIndex.from_documents(
-    documents, storage_context=storage_context,show_progress=True,
-)
