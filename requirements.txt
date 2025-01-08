@@ -11,3 +11,4 @@ openai==1.52.0
 pinecone-client==5.0.1
 python-dotenv==1.0.1
 tqdm==4.66.5
+streamlit
