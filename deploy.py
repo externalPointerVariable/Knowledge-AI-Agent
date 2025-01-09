@@ -23,7 +23,7 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 
 def initialize_chatbot():
-    """Initialize the chatbot with the latest OpenAI models"""
+    """Initialize the chatbot with the latest Google Gemini models"""
     try:
         load_dotenv()
         
@@ -34,7 +34,7 @@ def initialize_chatbot():
         Settings.embed_model = embed_model
         
         pinecone_client = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
-        pinecone_index = pinecone_client.Index("indianconstitution")
+        pinecone_index = pinecone_client.Index(os.environ["PINECONE_INDEX"])
         vector_store = PineconeVectorStore(pinecone_index=pinecone_index)
 
 
@@ -83,7 +83,7 @@ def get_response_text(response):
 
 def main():
     st.set_page_config(
-        page_title="Knowledge AI Agent",
+        page_title="Lawverse",
         page_icon="🏪",
         layout="wide"
     )
