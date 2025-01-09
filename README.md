@@ -1,7 +1,5 @@
 # Knowledge-AI-Agent
 
-## Overview
-
 Knowledge-AI-Agent is an AI-powered chatbot designed to answer queries related to the Indian Constitution. It leverages Retrieval-Augmented Generation (RAG) and LLM technologies to provide accurate and informative responses based on the dataset of the Indian Constitution articles.
 
 ## Features
@@ -19,7 +17,14 @@ Knowledge-AI-Agent is an AI-powered chatbot designed to answer queries related t
     cd Knowledge-AI-Agent
     ```
 
-2. Create and activate a virtual environment:
+2. Set up the environment file namely `.env` and set the following variables:
+    ```env
+    GOOGLE_API_KEY = // API key of google gemini
+    PINECONE_API_KEY = // API key of PinconeDB
+    PINECONE_INDEX = // Name of the index in pineconeDB
+    ```
+
+3. Create and activate a virtual environment:
     ```sh
     python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
@@ -30,7 +35,7 @@ Knowledge-AI-Agent is an AI-powered chatbot designed to answer queries related t
     conda activate myenv
     ```
 
-3. Install the required dependencies:
+4. Install the required dependencies:
     ```sh
     pip install -r requirements.txt
     ```
