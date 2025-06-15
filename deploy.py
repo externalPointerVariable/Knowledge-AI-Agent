@@ -89,7 +89,7 @@ def main():
     )
     
     with st.sidebar:
-        st.image("https://tile.loc.gov/image-services/iiif/service:ll:llscd:57026883:00010000/full/pct:100/0/default.jpg", use_column_width=True)
+        st.image("https://tile.loc.gov/image-services/iiif/service:ll:llscd:57026883:00010000/full/pct:100/0/default.jpg", use_container_width=True)
         st.header("Indian Constitution AI Agent")
         st.markdown(
             """
