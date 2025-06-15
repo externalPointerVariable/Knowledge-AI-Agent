@@ -27,7 +27,7 @@ def initialize_chatbot():
     try:
         load_dotenv()
         
-        llm = Gemini(api_key=os.environ["GOOGLE_API_KEY"],model="models/gemini-1.5-flash-8b")
+        llm = Gemini(api_key=os.environ["GOOGLE_API_KEY"],model="models/gemini-2.0-flash")
         embed_model = GeminiEmbedding(model_name="models/embedding-001")
         
         Settings.llm = llm
